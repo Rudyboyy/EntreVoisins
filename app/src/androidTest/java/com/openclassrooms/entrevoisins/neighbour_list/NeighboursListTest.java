@@ -1,28 +1,6 @@
 
 package com.openclassrooms.entrevoisins.neighbour_list;
 
-import android.drm.DrmStore;
-import android.support.test.espresso.ViewAction;
-import android.support.test.espresso.ViewAssertion;
-import android.support.test.espresso.action.ViewActions;
-import android.support.test.espresso.contrib.RecyclerViewActions;
-import android.support.test.espresso.matcher.ViewMatchers;
-import android.support.test.rule.ActivityTestRule;
-import android.support.test.runner.AndroidJUnit4;
-import android.view.View;
-
-import com.openclassrooms.entrevoisins.R;
-import com.openclassrooms.entrevoisins.ui.neighbour_list.ListNeighbourActivity;
-import com.openclassrooms.entrevoisins.utils.DeleteViewAction;
-
-import org.hamcrest.Description;
-import org.hamcrest.Matcher;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.internal.matchers.TypeSafeMatcher;
-import org.junit.runner.RunWith;
-
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.Espresso.pressBack;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
@@ -30,8 +8,25 @@ import static android.support.test.espresso.matcher.ViewMatchers.assertThat;
 import static android.support.test.espresso.matcher.ViewMatchers.hasMinimumChildCount;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
+import static com.openclassrooms.entrevoisins.utils.MatcherViewWithIndex.withIndex;
 import static com.openclassrooms.entrevoisins.utils.RecyclerViewItemCountAssertion.withItemCount;
 import static org.hamcrest.core.IsNull.notNullValue;
+
+import android.support.test.espresso.action.ViewActions;
+import android.support.test.espresso.assertion.ViewAssertions;
+import android.support.test.espresso.contrib.RecyclerViewActions;
+import android.support.test.espresso.matcher.ViewMatchers;
+import android.support.test.rule.ActivityTestRule;
+import android.support.test.runner.AndroidJUnit4;
+
+import com.openclassrooms.entrevoisins.R;
+import com.openclassrooms.entrevoisins.ui.neighbour_list.ListNeighbourActivity;
+import com.openclassrooms.entrevoisins.utils.DeleteViewAction;
+
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 
 
 /**
@@ -39,24 +34,6 @@ import static org.hamcrest.core.IsNull.notNullValue;
  */
 @RunWith(AndroidJUnit4.class)
 public class NeighboursListTest {
-
-    public static Matcher<View> withIndex(final Matcher<View> matcher, final int index) {
-        return new TypeSafeMatcher<View>() {
-            int currentIndex = 0;
-
-            @Override
-            public void describeTo(Description description) {
-                description.appendText("with index: ");
-                description.appendValue(index);
-                matcher.describeTo(description);
-            }
-
-            @Override
-            public boolean matchesSafely(View view) {
-                return matcher.matches(view) && currentIndex++ == index;
-            }
-        };
-    }
 
     // This is fixed
     private static int ITEMS_COUNT = 12;
@@ -96,4 +73,101 @@ public class NeighboursListTest {
         // Then : the number of element is 11
         onView(withIndex(withId(R.id.list_neighbours), 0)).check(withItemCount(ITEMS_COUNT - 1));
     }
+
+    //todo rajout a partir d'ici
+    @Test
+    public void myNeighboursList_neighbourAction_shouldShowNeighbourDetail() {
+        onView(withIndex(withId(R.id.list_neighbours), 0)).perform(RecyclerViewActions.actionOnItemAtPosition(1, ViewActions.click()));
+        onView(ViewMatchers.withId(R.id.neighbour_detail)).check(matches(isDisplayed()));
+    }
+
+    @Test
+    public void myNeighbourDetail_textViewShouldDisplayTheNeighbourName() {// todo rajout
+        onView(withIndex(withId(R.id.list_neighbours), 0)).perform(RecyclerViewActions.actionOnItemAtPosition(1, ViewActions.click()));
+        onView(ViewMatchers.withId(R.id.textView)).check(ViewAssertions.matches(ViewMatchers.withText("Jack")));
+    }
+
+    @Test
+    public void myNeighboursList_deleteAction_shouldRemoveItemBothList() {// todo rajout (si androidX fonctionne remplacer le test)
+        onView(withIndex(withId(R.id.list_neighbours), 0)).perform(RecyclerViewActions.actionOnItemAtPosition(1, ViewActions.click()));
+        onView(ViewMatchers.withId(R.id.floatingActionButton)).perform(ViewActions.click());
+        pressBack();
+        onView(withIndex(withId(R.id.list_neighbours), 1)).check(withItemCount(1));
+        onView(withIndex(withId(R.id.list_neighbours), 0)).perform(RecyclerViewActions.actionOnItemAtPosition(1, new DeleteViewAction()));
+        onView(withIndex(withId(R.id.list_neighbours), 1)).check(withItemCount(0));
+    }
+
+    // todo les ViewMatcher ne servent a rien ??
+    @Test
+    public void myFavoriteNeighboursList_checkNumberOfNeighboursIsRight() {// todo rajout
+        onView(withIndex(withId(R.id.list_neighbours), 1)).check(withItemCount(0));
+        onView(withIndex(withId(R.id.list_neighbours), 0)).perform(RecyclerViewActions.actionOnItemAtPosition(1, ViewActions.click()));
+        onView(ViewMatchers.withId(R.id.floatingActionButton)).perform(ViewActions.click());
+        pressBack();
+        onView(withIndex(withId(R.id.list_neighbours), 0)).perform(RecyclerViewActions.actionOnItemAtPosition(2, ViewActions.click()));
+        onView(ViewMatchers.withId(R.id.floatingActionButton)).perform(ViewActions.click());
+        pressBack();
+        onView(withIndex(withId(R.id.list_neighbours), 0)).perform(RecyclerViewActions.actionOnItemAtPosition(3, ViewActions.click()));
+        onView(ViewMatchers.withId(R.id.floatingActionButton)).perform(ViewActions.click());
+        pressBack();
+        onView(withIndex(withId(R.id.list_neighbours), 0)).perform(RecyclerViewActions.actionOnItemAtPosition(4, ViewActions.click()));
+        onView(ViewMatchers.withId(R.id.floatingActionButton)).perform(ViewActions.click());
+        pressBack();
+        onView(withIndex(withId(R.id.list_neighbours), 0)).perform(RecyclerViewActions.actionOnItemAtPosition(5, ViewActions.click()));
+        onView(ViewMatchers.withId(R.id.floatingActionButton)).perform(ViewActions.click());
+        pressBack();
+        onView(withIndex(withId(R.id.list_neighbours), 1)).check(withItemCount(5));
+    }
+
+    @Test
+    public void myFavoriteNeighboursList_shouldBeEmpty() {//todo inutile ?
+        onView(withIndex(withId(R.id.list_neighbours), 1)).check(withItemCount(0));
+    }
+
+    @Test
+    public void myNeighbourDetail_favoriteAction_shouldAddItemToMyNeighboursFavoriteList() {
+        onView(withIndex(withId(R.id.list_neighbours), 0)).perform(RecyclerViewActions.actionOnItemAtPosition(1, ViewActions.click()));
+        onView(ViewMatchers.withId(R.id.floatingActionButton)).perform(ViewActions.click());
+        pressBack();
+        onView(withIndex(withId(R.id.list_neighbours), 1)).check(withItemCount(+1));//todo rajout du + devant le 1
+    }
+
+    @Test
+    public void myNeighbourDetail_favoriteActionTwice_shouldRemoveItemFromFavorite() {
+        onView(withIndex(withId(R.id.list_neighbours), 0)).perform(RecyclerViewActions.actionOnItemAtPosition(1, ViewActions.click()));
+        onView(ViewMatchers.withId(R.id.floatingActionButton)).perform(ViewActions.doubleClick());
+/*        pressBack();
+        onView(withIndex(withId(R.id.list_neighbours), 1)).check(withItemCount(1));
+        onView(withIndex(withId(R.id.list_neighbours), 0)).perform(RecyclerViewActions.actionOnItemAtPosition(1, ViewActions.click()));
+        onView(ViewMatchers.withId(R.id.floatingActionButton)).perform(ViewActions.click());*/
+        //todo laquelle choisir double click ou 2fois click (est-ce que le nom du test est correct)
+        pressBack();
+        onView(withIndex(withId(R.id.list_neighbours), 1)).check(withItemCount(0));
+    }
+
+    @Test
+    public void myNeighbourDetail_backButtonAction_shouldReturnToThePreviousView () {
+        onView(withIndex(withId(R.id.list_neighbours), 0)).perform(RecyclerViewActions.actionOnItemAtPosition(1, ViewActions.click()));
+        onView(ViewMatchers.withId(R.id.imageButton)).perform(ViewActions.click());
+        onView(withIndex(withId(R.id.list_neighbours), 0)).check(matches(isDisplayed()));
+    }
+    //todo rajout
+/*    @Test
+    public void myFavoriteNeighboursList_deleteAction_shouldRemoveItemInBothList() {
+        onView(withIndex(withId(R.id.list_neighbours), 0)).check(withItemCount(ITEMS_COUNT));
+        onView(withIndex(withId(R.id.list_neighbours), 0)).perform(RecyclerViewActions.actionOnItemAtPosition(1, ViewActions.click()));
+        onView(ViewMatchers.withId(R.id.floatingActionButton)).perform(ViewActions.click());
+        pressBack();
+        onView(withIndex(withId(R.id.list_neighbours), 0)).perform(RecyclerViewActions.actionOnItemAtPosition(2, ViewActions.click()));
+        onView(ViewMatchers.withId(R.id.floatingActionButton)).perform(ViewActions.click());
+        pressBack();
+        onView(withIndex(withId(R.id.list_neighbours), 1)).perform(RecyclerViewActions.actionOnItemAtPosition(1, new DeleteViewAction()));
+        onView(withIndex(withId(R.id.list_neighbours), 0)).check(withItemCount(ITEMS_COUNT - 1));
+        onView(withIndex(withId(R.id.list_neighbours), 1)).check(withItemCount(1));//todo voir avec android X
+    }*/
+//todo
+//    ne fonctionne pas retour l'erreur suivante
+//    android.support.test.espresso.PerformException:
+//    Error performing 'actionOnItemAtPosition performing ViewAction: single click on item at position: 1'on view 'Animations or transitions are enabled on the target device.
+//    test suppression des delai d'animation + le swipe
 }
