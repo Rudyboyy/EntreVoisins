@@ -12,6 +12,7 @@ import static com.openclassrooms.entrevoisins.utils.MatcherViewWithIndex.withInd
 import static com.openclassrooms.entrevoisins.utils.RecyclerViewItemCountAssertion.withItemCount;
 import static org.hamcrest.core.IsNull.notNullValue;
 
+import android.support.test.espresso.ViewAction;
 import android.support.test.espresso.action.ViewActions;
 import android.support.test.espresso.assertion.ViewAssertions;
 import android.support.test.espresso.contrib.RecyclerViewActions;
@@ -152,7 +153,7 @@ public class NeighboursListTest {
         onView(withIndex(withId(R.id.list_neighbours), 0)).check(matches(isDisplayed()));
     }
     //todo rajout
-/*    @Test
+    @Test
     public void myFavoriteNeighboursList_deleteAction_shouldRemoveItemInBothList() {
         onView(withIndex(withId(R.id.list_neighbours), 0)).check(withItemCount(ITEMS_COUNT));
         onView(withIndex(withId(R.id.list_neighbours), 0)).perform(RecyclerViewActions.actionOnItemAtPosition(1, ViewActions.click()));
@@ -161,10 +162,14 @@ public class NeighboursListTest {
         onView(withIndex(withId(R.id.list_neighbours), 0)).perform(RecyclerViewActions.actionOnItemAtPosition(2, ViewActions.click()));
         onView(ViewMatchers.withId(R.id.floatingActionButton)).perform(ViewActions.click());
         pressBack();
+
+        onView(withIndex(withId(R.id.list_neighbours), 0)).perform(ViewActions.swipeLeft());
+
         onView(withIndex(withId(R.id.list_neighbours), 1)).perform(RecyclerViewActions.actionOnItemAtPosition(1, new DeleteViewAction()));
         onView(withIndex(withId(R.id.list_neighbours), 0)).check(withItemCount(ITEMS_COUNT - 1));
         onView(withIndex(withId(R.id.list_neighbours), 1)).check(withItemCount(1));//todo voir avec android X
-    }*/
+    }
+
 //todo
 //    ne fonctionne pas retour l'erreur suivante
 //    android.support.test.espresso.PerformException:
