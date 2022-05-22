@@ -21,5 +21,5 @@ $ git clone https://github.com/Rudyboyy/EntreVoisins..git
 * Open it in Android Studio
 ### Run and compile
 ***
-* Choose an emulator (virtual or reel)
+* Choose an device (virtual or physical)
 * Click on Run or use <kbd>Shift</kbd>+<kbd>F10</kbd>
