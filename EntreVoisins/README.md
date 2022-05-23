@@ -14,12 +14,12 @@ A little intro about the installation.
 #### Option 1
 Use the terminal of Android Studio, copy and execute the command line :
 ```
-$ git clone https://github.com/Rudyboyy/EntreVoisins..git
+$ git clone https://github.com/Rudyboyy/EntreVoisins.git
 ```
 #### Option 2
-* Download the ZIP folder -> https://github.com/Rudyboyy/EntreVoisins./archive/refs/heads/main.zip
+* Download the ZIP folder -> https://github.com/Rudyboyy/EntreVoisins/archive/refs/heads/main.zip
 * Open it in Android Studio
 ### Run and compile
 ***
-* Choose an device (virtual or physical)
+* Choose a device (virtual or physical)
 * Click on Run or use <kbd>Shift</kbd>+<kbd>F10</kbd>
